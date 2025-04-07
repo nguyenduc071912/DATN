@@ -496,13 +496,9 @@ public class QuanLyDonHang extends javax.swing.JFrame {
 
                 stmt.setString(1, maDH);
                 stmt.setString(2, maNV);
-
-                int choice = JOptionPane.showConfirmDialog(this, "Bạn có muốn thanh toán ?", "Thông báo", JOptionPane.YES_NO_OPTION);
-                if (choice == JOptionPane.YES_OPTION) {
-                    stmt.execute();
+                stmt.execute();
                     JOptionPane.showMessageDialog(this, "Thanh toán thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     loadData();
-                }
 
             } catch (Exception e) {
                 if (e.getMessage().contains("Đơn hàng này đã được thanh toán")) {
