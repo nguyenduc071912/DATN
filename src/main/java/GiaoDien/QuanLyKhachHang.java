@@ -252,8 +252,8 @@ DefaultTableModel tableModel;
         }else{
             try {
                 int namSinh = Integer.parseInt(txtTuoi.getText());
-                if (namSinh >= 2009) {
-                    sb.append("Chưa đủ 16 tuổi để mua hàng\n");
+                if (namSinh >= 2022) {
+                    sb.append("Chưa đủ 3 tuổi trở lên để mua hàng\n");
                 }
             } catch (NumberFormatException e) {
                 sb.append("Vui lòng nhập số hợp lệ cho tuổi\n");
