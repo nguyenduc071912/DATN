@@ -65,7 +65,11 @@
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                   <Component id="jScrollPane2" min="-2" pref="499" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="txtTim" max="32767" attributes="0"/>
+                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cboTimKiem" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtTim" min="-2" pref="160" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnTim" min="-2" pref="89" max="-2" attributes="0"/>
                   </Group>
@@ -83,12 +87,21 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtMa" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnTim" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtTim" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtMa" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnTim" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtTim" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboTimKiem" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -229,6 +242,24 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="cboTimKiem">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="2">
+            <StringItem index="0" value="M&#xe3; nguy&#xea;n li&#x1ec7;u"/>
+            <StringItem index="1" value="T&#xea;n nguy&#xea;n li&#x1ec7;u"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel6">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ch&#x1ecd;n t&#xec;m ki&#x1ebf;m"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

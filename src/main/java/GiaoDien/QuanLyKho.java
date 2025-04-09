@@ -8,6 +8,7 @@ import Mode.Kho;
 import Services.KhoServices;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -83,6 +84,8 @@ public class QuanLyKho extends javax.swing.JFrame {
         btnTim = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         cboDonVi = new javax.swing.JComboBox<>();
+        cboTimKiem = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -146,6 +149,10 @@ public class QuanLyKho extends javax.swing.JFrame {
 
         cboDonVi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gói", "Quả" }));
 
+        cboTimKiem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã nguyên liệu", "Tên nguyên liệu" }));
+
+        jLabel6.setText("Chọn tìm kiếm");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -182,7 +189,11 @@ public class QuanLyKho extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtTim)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboTimKiem, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnTim, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18))
@@ -195,12 +206,18 @@ public class QuanLyKho extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtMa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTim)
-                    .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtMa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnTim)
+                            .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -229,19 +246,17 @@ public class QuanLyKho extends javax.swing.JFrame {
 
     private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
         // TODO add your handling code here:
-        String MaNL = txtTim.getText().trim();
-        if (MaNL.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập mã nguyên liệu!");
+        String key = txtTim.getText();
+        if(key.equals("")){
+            JOptionPane.showMessageDialog(this,"Nhập keyword bạn cần");
             return;
         }
-        List<Kho> kList = (List<Kho>) KhoServices.getById(MaNL);
-        if (kList != null) {
-            tableModel.setNumRows(0);
-            for (Kho k : kList) {
-                tableModel.addRow(new Object[]{k.getMaNL(), k.getTenNL(), k.getSoLuong(), k.getDonVi()});
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Không tìm thấy nguyên liệu với mã: " + MaNL);
+        String chon = cboTimKiem.getSelectedItem().toString();
+        KhoServices k = new KhoServices();
+        ArrayList<Kho> qlk = (ArrayList<Kho>) KhoServices.TimKiem(key, chon);
+        tableModel.setNumRows(0);
+        for (Kho K : qlk) {
+            tableModel.addRow(new Object[]{K.getMaNL(), K.getTenNL(), Integer.valueOf((int) K.getSoLuong()), K.getDonVi()});
         }
     }//GEN-LAST:event_btnTimActionPerformed
 
@@ -413,11 +428,13 @@ public class QuanLyKho extends javax.swing.JFrame {
     private javax.swing.JButton btnTim;
     private javax.swing.JButton btnXoa;
     private javax.swing.JComboBox<String> cboDonVi;
+    private javax.swing.JComboBox<String> cboTimKiem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblKho;
     private javax.swing.JTextField txtMa;

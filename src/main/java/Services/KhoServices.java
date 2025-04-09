@@ -59,14 +59,19 @@ public class KhoServices {
         return null;
     }
     
-    public static List<Kho> getById(String MaNL){
-        String sql = "select * from Kho where MaNL = ?";
-        Kho k = new Kho();
+    public static List<Kho> TimKiem(String key,String chon){
+        List<Kho> kList = new ArrayList<>();
+        String column = switch(chon){
+            case"Mã nguyên liệu"->"MaNL";
+            case"Tên nguyên liệu"->"TenNL";
+            default->null;
+        };
+        String sql = "SELECT * FROM Kho WHERE " + column + " LIKE ?";
         try (Connection con = DriverManager.getConnection(connectionUrl);PreparedStatement stm = con.prepareStatement(sql)){
-            stm.setString(1,MaNL);
-            List<Kho> kList = new ArrayList<>();
+            stm.setString(1,"%"+key+"%");
             ResultSet rs = stm.executeQuery();
             while(rs.next()){
+                Kho k = new Kho();
                 k.setMaNL(rs.getString("MaNL"));
                 k.setTenNL(rs.getString("TenNL"));
                 k.setSoLuong(rs.getFloat("SoLuong"));
@@ -74,6 +79,7 @@ public class KhoServices {
                 kList.add(k);
             }
             return kList;
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
