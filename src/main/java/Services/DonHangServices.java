@@ -5,8 +5,10 @@
 package Services;
 
 import Mode.DonHang;
+import Mode.NhanVien;
 import java.lang.reflect.Array;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +33,7 @@ public class DonHangServices {
             ps.setString(4, dh.getMaSP());
             ps.setString(5, dh.getSize());
             ps.setInt(6, dh.getSoLuong());
-            ps.setString(7, dh.getNgayDatHang());
+            ps.setDate(7, new java.sql.Date(dh.getNgayDatHang().getTime()));
             ps.setString(8, dh.getHinhThucThanhToan());
             ps.setInt(9, dh.getTongTien());
             return ps.executeUpdate() > 0;
@@ -50,7 +52,7 @@ public class DonHangServices {
             ps.setString(3, dh.getMaSP());
             ps.setString(4, dh.getSize());
             ps.setInt(5, dh.getSoLuong());
-            ps.setString(6, dh.getNgayDatHang());
+            ps.setDate(6, new java.sql.Date(dh.getNgayDatHang().getTime()));
             ps.setString(7, dh.getHinhThucThanhToan());
             ps.setInt(8, dh.getTongTien());
             return ps.executeUpdate() > 0;
@@ -59,12 +61,12 @@ public class DonHangServices {
         }
         return false;
     }
-    
-    public static boolean Delete(DonHang dh){
+
+    public static boolean Delete(DonHang dh) {
         String sql = "delete from DonHang where MaDH=?";
-        try (Connection con = DriverManager.getConnection(connectionUrl);PreparedStatement stm = con.prepareStatement(sql)){
-            stm.setString(1,dh.getMaDH());
-            return stm.executeUpdate()>0;
+        try (Connection con = DriverManager.getConnection(connectionUrl); PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setString(1, dh.getMaDH());
+            return stm.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,7 +89,7 @@ public class DonHangServices {
                 dh.setMaSP(rs.getString("TenSP"));
                 dh.setSize(rs.getString("Size"));
                 dh.setSoLuong(rs.getInt("SoLuong"));
-                dh.setNgayDatHang(rs.getString("NgayDatHang"));
+                dh.setNgayDatHang(rs.getDate("NgayDatHang"));
                 dh.setHinhThucThanhToan(rs.getString("HinhThucThanhToan"));
                 dh.setTongTien(rs.getInt("TongTien"));
                 dhlist.add(dh);
@@ -112,7 +114,7 @@ public class DonHangServices {
                 dh.setMaSP(rs.getString("MaSP"));
                 dh.setSize(rs.getString("Size"));
                 dh.setSoLuong(rs.getInt("SoLuong"));
-                dh.setNgayDatHang(rs.getString("NgayDatHang"));
+                dh.setNgayDatHang(rs.getDate("NgayDatHang"));
                 dh.setHinhThucThanhToan(rs.getString("HinhThucThanhToan"));
                 dh.setTongTien(rs.getInt("TongTien"));
             }
@@ -137,7 +139,7 @@ public class DonHangServices {
                 dh.setMaSP(rs.getString("MaSP"));
                 dh.setSize(rs.getString("Size"));
                 dh.setSoLuong(rs.getInt("SoLuong"));
-                dh.setNgayDatHang(rs.getString("NgayDatHang"));
+                dh.setNgayDatHang(rs.getDate("NgayDatHang"));
                 dh.setHinhThucThanhToan(rs.getString("HinhThucThanhToan"));
                 dh.setTongTien(rs.getInt("TongTien"));
                 dhList.add(dh);
@@ -168,14 +170,14 @@ public class DonHangServices {
 
         return gia;
     }
-    
+
     public static boolean checkStockBeforeAdd(String maSP, int soLuongMua) {
         String query = "SELECT k.SoLuong FROM Kho k JOIN SanPham sp ON k.MaNL = sp.MaNL WHERE sp.MaSP = ?";
-        
-        try (Connection conn = DriverManager.getConnection(connectionUrl);PreparedStatement stmt = conn.prepareStatement(query)) {
+
+        try (Connection conn = DriverManager.getConnection(connectionUrl); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, maSP);
             ResultSet rs = stmt.executeQuery();
-            
+
             if (rs.next()) {
                 int soLuongTrongKho = rs.getInt("SoLuong");
                 return soLuongMua <= soLuongTrongKho;
@@ -185,21 +187,38 @@ public class DonHangServices {
         }
         return false;
     }
-    
+
     public static boolean isThuNgan(String maNV) {
-    String query = "SELECT COUNT(*) FROM NhanVien WHERE MaNV = ? AND VaiTro = 'Thu ngân'";
+        String query = "SELECT COUNT(*) FROM NhanVien WHERE MaNV = ? AND VaiTro = 'Thu ngân'";
 
-    try (Connection conn = DriverManager.getConnection(connectionUrl);PreparedStatement stmt = conn.prepareStatement(query)) {
-        stmt.setString(1, maNV);
-        ResultSet rs = stmt.executeQuery();
+        try (Connection conn = DriverManager.getConnection(connectionUrl); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, maNV);
+            ResultSet rs = stmt.executeQuery();
 
-        if (rs.next() && rs.getInt(1) > 0) {
-            return true; // Nhân viên là thu ngân
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true; // Nhân viên là thu ngân
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return false; // Không phải thu ngân
     }
-    return false; // Không phải thu ngân
-}
+
+    public static List<NhanVien> getTenNhanVienThuNgan() {
+        List<NhanVien> list = new ArrayList<>();
+        String sql = "SELECT MaNV, HoTenNV FROM NhanVien WHERE VaiTro = 'Thu ngân'";
+        try (Connection conn = DriverManager.getConnection(connectionUrl); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                NhanVien nv = new NhanVien();
+                nv.setMaNV(rs.getString("MaNV"));
+                nv.setHoTenNV(rs.getString("HoTenNV"));
+                list.add(nv);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
 }

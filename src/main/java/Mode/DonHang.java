@@ -4,27 +4,31 @@
  */
 package Mode;
 
+import java.util.Date;
+
 /**
  *
  * @author Admin
  */
 public class DonHang {
-    String MaDH,MaNV,MaKH,MaSP,Size,NgayDatHang,HinhThucThanhToan;
-    int SoLuong,TongTien;
+
+    String MaDH, MaNV, MaKH, MaSP, Size, HinhThucThanhToan;
+    int SoLuong, TongTien;
+    Date NgayDatHang;
 
     public DonHang() {
     }
 
-    public DonHang(String MaDH, String MaNV, String MaKH, String MaSP, String Size, String NgayDatHang, String HinhThucThanhToan, int SoLuong, int TongTien) {
+    public DonHang(String MaDH, String MaNV, String MaKH, String MaSP, String Size, String HinhThucThanhToan, int SoLuong, int TongTien, Date NgayDatHang) {
         this.MaDH = MaDH;
         this.MaNV = MaNV;
         this.MaKH = MaKH;
         this.MaSP = MaSP;
         this.Size = Size;
-        this.NgayDatHang = NgayDatHang;
         this.HinhThucThanhToan = HinhThucThanhToan;
         this.SoLuong = SoLuong;
         this.TongTien = TongTien;
+        this.NgayDatHang = NgayDatHang;
     }
 
     public String getMaDH() {
@@ -67,14 +71,6 @@ public class DonHang {
         this.Size = Size;
     }
 
-    public String getNgayDatHang() {
-        return NgayDatHang;
-    }
-
-    public void setNgayDatHang(String NgayDatHang) {
-        this.NgayDatHang = NgayDatHang;
-    }
-
     public String getHinhThucThanhToan() {
         return HinhThucThanhToan;
     }
@@ -99,7 +95,12 @@ public class DonHang {
         this.TongTien = TongTien;
     }
 
-    
-    
-    
+    public Date getNgayDatHang() {
+        return NgayDatHang;
+    }
+
+    public void setNgayDatHang(Date NgayDatHang) {
+        this.NgayDatHang = NgayDatHang;
+    }
+
 }

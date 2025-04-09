@@ -5,6 +5,7 @@
 package GiaoDien;
 
 import Mode.DonHang;
+import Mode.NhanVien;
 import Services.DonHangServices;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -15,6 +16,8 @@ import java.sql.PreparedStatement;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -25,6 +28,8 @@ public class QuanLyDonHang extends javax.swing.JFrame {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     static String connectionUrl = "jdbc:sqlserver://26.107.57.204:1433;databaseName=DATN_PRO230;user=datn;password=123;trustServerCertificate=true";
     DefaultTableModel tblModel;
+    Map<String, String> mapTenToMa = new HashMap<>();
+    Map<String, String> mapMaToTen = new HashMap<>();
 
     /**
      * Creates new form SanPham
@@ -35,6 +40,22 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         loadData();
         txtTongTien.setEnabled(false);
         sdf.setLenient(false);
+        loadNhanVienThuNgan();
+    }
+
+    public void loadNhanVienThuNgan() {
+        List<NhanVien> list = DonHangServices.getTenNhanVienThuNgan();
+        cboNhanVien.removeAllItems();
+        mapTenToMa.clear();
+
+        for (NhanVien nv : list) {
+            String ten = nv.getHoTenNV();
+            String ma = nv.getMaNV();
+            cboNhanVien.addItem(ten);
+            mapTenToMa.put(ten, ma);
+            mapMaToTen.put(ma, ten);
+        }
+
     }
 
     public void initTable() {
@@ -80,7 +101,6 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnThem = new javax.swing.JButton();
-        txtMaNV = new javax.swing.JTextField();
         btnSua = new javax.swing.JButton();
         btnXoa = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
@@ -92,7 +112,6 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         cboHinhThucThanhToan = new javax.swing.JComboBox<>();
-        txtNgayTaoDon = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblDH = new javax.swing.JTable();
         txtTim = new javax.swing.JTextField();
@@ -104,6 +123,8 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         txtSoLuong = new javax.swing.JTextField();
         btnThanhToan = new javax.swing.JButton();
+        DateNgayTaoDon = new com.toedter.calendar.JDateChooser();
+        cboNhanVien = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -157,12 +178,6 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         jLabel8.setText("Tổng tiền");
 
         cboHinhThucThanhToan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiền mặt", "Quẹt thẻ" }));
-
-        txtNgayTaoDon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNgayTaoDonActionPerformed(evt);
-            }
-        });
 
         tblDH.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -227,6 +242,10 @@ public class QuanLyDonHang extends javax.swing.JFrame {
             }
         });
 
+        DateNgayTaoDon.setDateFormatString("yyyy-MM-dd");
+
+        cboNhanVien.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -239,21 +258,6 @@ public class QuanLyDonHang extends javax.swing.JFrame {
                         .addGap(401, 401, 401))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(56, 56, 56)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cboSize, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtMaDH, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtMaNV, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtMaKH, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtMaSP, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(btnThem)
@@ -265,7 +269,21 @@ public class QuanLyDonHang extends javax.swing.JFrame {
                                     .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, 749, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(btnTim, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel6)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(56, 56, 56)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(cboNhanVien, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cboSize, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtMaDH, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                                        .addComponent(txtMaKH, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                                        .addComponent(txtMaSP, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE))
+                                    .addGap(50, 50, 50)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
                                             .addComponent(jLabel8)
@@ -280,9 +298,9 @@ public class QuanLyDonHang extends javax.swing.JFrame {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(txtTongTien)
-                                        .addComponent(txtNgayTaoDon)
                                         .addComponent(cboHinhThucThanhToan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(txtSoLuong, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                                        .addComponent(DateNgayTaoDon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 749, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -295,7 +313,7 @@ public class QuanLyDonHang extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
@@ -306,40 +324,43 @@ public class QuanLyDonHang extends javax.swing.JFrame {
                             .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtMaNV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4)
-                                .addComponent(txtNgayTaoDon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(txtMaKH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel7)
-                                .addComponent(cboHinhThucThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtMaSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel8)
-                            .addComponent(txtTongTien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnThem)
-                                .addComponent(btnSua)
-                                .addComponent(btnXoa))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(cboSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel9)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnTim))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel4)
+                                        .addComponent(cboNhanVien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(15, 15, 15)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(txtMaKH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel7)
+                                        .addComponent(cboHinhThucThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtMaSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel8)
+                                    .addComponent(txtTongTien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnThem)
+                                        .addComponent(btnSua)
+                                        .addComponent(btnXoa))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(cboSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel9)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnTim)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(DateNgayTaoDon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(66, 66, 66))
+                .addGap(52, 52, 52))
         );
 
         pack();
@@ -356,10 +377,6 @@ public class QuanLyDonHang extends javax.swing.JFrame {
     private void cboSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboSizeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cboSizeActionPerformed
-
-    private void txtNgayTaoDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNgayTaoDonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtNgayTaoDonActionPerformed
 
     private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
         // TODO add your handling code here:
@@ -385,19 +402,6 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         if (txtMaDH.getText().isEmpty()) {
             sb.append("Vui lòng nhập Mã đơn hàng");
         }
-        if (txtMaNV.getText().isEmpty()) {
-            sb.append("Vui lòng nhập Mã nhân viên");
-        } else {
-            try {
-                if (!DonHangServices.isThuNgan(txtMaNV.getText())) {
-                    JOptionPane.showMessageDialog(this, "Nhân viên không phải thu ngân!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Lỗi kiểm tra nhân viên: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }
         if (txtMaKH.getText().isEmpty()) {
             sb.append("Vui lòng nhập Mã khách hàng");
         }
@@ -416,14 +420,8 @@ public class QuanLyDonHang extends javax.swing.JFrame {
                 sb.append("Nhập đúng định dạng số lượng\n");
             }
         }
-        if (txtNgayTaoDon.getText().isEmpty()) {
-            sb.append("Vui lòng nhập Mã ngày tạo đơn");
-        } else {
-            try {
-                sdf.parse(txtNgayTaoDon.getText());
-            } catch (Exception e) {
-                sb.append("Vui lòng nhập đúng định dạng 'yyyy-MM-dd'");
-            }
+        if (DateNgayTaoDon.getDate() == null) {
+            sb.append("Vui lòng chọn ngày tạo đơn");
         }
         if (txtTongTien.getText().isEmpty()) {
             sb.append("Vui lòng nhập Mã tổng tiền");
@@ -435,12 +433,14 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         try {
             DonHang dh = new DonHang();
             dh.setMaDH(txtMaDH.getText());
-            dh.setMaNV(txtMaNV.getText());
+            String tenChon = (String) cboNhanVien.getSelectedItem();
+            String maNV = mapTenToMa.get(tenChon);
+            dh.setMaNV(maNV);
             dh.setMaKH(txtMaKH.getText());
             dh.setMaSP(txtMaSP.getText());
             dh.setSize((String) cboSize.getSelectedItem());
             dh.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
-            dh.setNgayDatHang(txtNgayTaoDon.getText());
+            dh.setNgayDatHang(DateNgayTaoDon.getDate());
             dh.setHinhThucThanhToan((String) cboHinhThucThanhToan.getSelectedItem());
             dh.setTongTien(Integer.parseInt(txtTongTien.getText()));
             if (!DonHangServices.checkStockBeforeAdd(txtMaSP.getText(), Integer.parseInt(txtSoLuong.getText()))) {
@@ -497,8 +497,8 @@ public class QuanLyDonHang extends javax.swing.JFrame {
                 stmt.setString(1, maDH);
                 stmt.setString(2, maNV);
                 stmt.execute();
-                    JOptionPane.showMessageDialog(this, "Thanh toán thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                    loadData();
+                JOptionPane.showMessageDialog(this, "Thanh toán thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                loadData();
 
             } catch (Exception e) {
                 if (e.getMessage().contains("Đơn hàng này đã được thanh toán")) {
@@ -515,20 +515,6 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         StringBuilder sb = new StringBuilder();
         if (txtMaDH.getText().isEmpty()) {
             sb.append("Vui lòng nhập Mã đơn hàng");
-        }
-        if (txtMaNV.getText().isEmpty()) {
-            sb.append("Vui lòng nhập Mã nhân viên");
-        } else {
-            try {
-                if (!DonHangServices.isThuNgan(txtMaNV.getText())) {
-                    JOptionPane.showMessageDialog(this, "Nhân viên không phải thu ngân!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Lỗi kiểm tra nhân viên: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
         }
         if (txtMaKH.getText().isEmpty()) {
             sb.append("Vui lòng nhập Mã khách hàng");
@@ -548,14 +534,8 @@ public class QuanLyDonHang extends javax.swing.JFrame {
                 sb.append("Nhập đúng định dạng số lượng\n");
             }
         }
-        if (txtNgayTaoDon.getText().isEmpty()) {
-            sb.append("Vui lòng nhập Mã ngày tạo đơn");
-        } else {
-            try {
-                sdf.parse(txtNgayTaoDon.getText());
-            } catch (Exception e) {
-                sb.append("Vui lòng nhập đúng định dạng 'yyyy-MM-dd'");
-            }
+        if (DateNgayTaoDon.getDate() == null) {
+            sb.append("Vui lòng chọn ngày tạo đơn");
         }
         if (txtTongTien.getText().isEmpty()) {
             sb.append("Vui lòng nhập Mã tổng tiền");
@@ -567,12 +547,14 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         try {
             DonHang dh = new DonHang();
             dh.setMaDH(txtMaDH.getText());
-            dh.setMaNV(txtMaNV.getText());
+            String tenChon = (String) cboNhanVien.getSelectedItem();
+            String maNV = mapTenToMa.get(tenChon);
+            dh.setMaNV(maNV);
             dh.setMaKH(txtMaKH.getText());
             dh.setMaSP(txtMaSP.getText());
             dh.setSize((String) cboSize.getSelectedItem());
             dh.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
-            dh.setNgayDatHang(txtNgayTaoDon.getText());
+            dh.setNgayDatHang(DateNgayTaoDon.getDate());
             dh.setHinhThucThanhToan((String) cboHinhThucThanhToan.getSelectedItem());
             dh.setTongTien(Integer.parseInt(txtTongTien.getText()));
             int choice = JOptionPane.showConfirmDialog(this, "Bạn có muốn sửa ?", "Thông báo", JOptionPane.OK_CANCEL_OPTION);
@@ -623,12 +605,14 @@ public class QuanLyDonHang extends javax.swing.JFrame {
             String ma = (String) tblDH.getValueAt(row, 0);
             DonHang dh = DonHangServices.getByName(ma);
             txtMaDH.setText(dh.getMaDH());
-            txtMaNV.setText(dh.getMaNV());
+            String tenNV = mapMaToTen.get(dh.getMaNV());
+            cboNhanVien.setSelectedItem(tenNV);
+
             txtMaKH.setText(dh.getMaKH());
             txtMaSP.setText(dh.getMaSP());
             cboSize.setSelectedItem(dh.getSize());
             txtSoLuong.setText(String.valueOf(dh.getSoLuong()));
-            txtNgayTaoDon.setText(dh.getNgayDatHang());
+            DateNgayTaoDon.setDate(dh.getNgayDatHang());
             cboHinhThucThanhToan.setSelectedItem(dh.getHinhThucThanhToan());
             txtTongTien.setText(String.valueOf(dh.getTongTien()));
         }
@@ -687,12 +671,14 @@ public class QuanLyDonHang extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.toedter.calendar.JDateChooser DateNgayTaoDon;
     private javax.swing.JButton btnSua;
     private javax.swing.JButton btnThanhToan;
     private javax.swing.JButton btnThem;
     private javax.swing.JButton btnTim;
     private javax.swing.JButton btnXoa;
     private javax.swing.JComboBox<String> cboHinhThucThanhToan;
+    private javax.swing.JComboBox<String> cboNhanVien;
     private javax.swing.JComboBox<String> cboSize;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -708,9 +694,7 @@ public class QuanLyDonHang extends javax.swing.JFrame {
     private javax.swing.JTable tblDH;
     private javax.swing.JTextField txtMaDH;
     private javax.swing.JTextField txtMaKH;
-    private javax.swing.JTextField txtMaNV;
     private javax.swing.JTextField txtMaSP;
-    private javax.swing.JTextField txtNgayTaoDon;
     private javax.swing.JTextField txtSoLuong;
     private javax.swing.JTextField txtTim;
     private javax.swing.JTextField txtTongTien;

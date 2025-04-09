@@ -9,8 +9,10 @@ package Mode;
  * @author Admin
  */
 public class NhanVien {
-    String MaNV,HoTenNV,VaiTro,SDT;
-    int Tuoi,GioiTinh;
+    String MaNV, HoTenNV, VaiTro, SDT;
+    int Tuoi, GioiTinh;
+
+    
 
     public NhanVien() {
     }
@@ -71,8 +73,6 @@ public class NhanVien {
     public void setGioiTinh(int GioiTinh) {
         this.GioiTinh = GioiTinh;
     }
-    
-    
     
     
 }
