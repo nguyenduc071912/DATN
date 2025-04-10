@@ -10,6 +10,7 @@ import Services.HoaDonChiTietServices;
 import Services.HoaDonServices;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -70,6 +71,8 @@ public class QuanLyHDCT extends javax.swing.JFrame {
         tblHDCT = new javax.swing.JTable();
         txtTimkiem = new javax.swing.JTextField();
         btnTimKiem = new javax.swing.JButton();
+        cboTimKiem = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -97,6 +100,10 @@ public class QuanLyHDCT extends javax.swing.JFrame {
             }
         });
 
+        cboTimKiem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã hóa đơn chi tiết", "Mã hóa đơn", "Tên sản phẩm" }));
+
+        jLabel2.setText("Chọn tìm kiếm");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -108,13 +115,17 @@ public class QuanLyHDCT extends javax.swing.JFrame {
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 969, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtTimkiem, javax.swing.GroupLayout.PREFERRED_SIZE, 852, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnTimKiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                .addContainerGap(15, Short.MAX_VALUE))
+                                .addComponent(cboTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtTimkiem, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnTimKiem)))))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -123,7 +134,9 @@ public class QuanLyHDCT extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTimkiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(17, Short.MAX_VALUE))
@@ -134,19 +147,17 @@ public class QuanLyHDCT extends javax.swing.JFrame {
 
     private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
         // TODO add your handling code here:
-        String MaHDCT = txtTimkiem.getText().trim();
-        if (MaHDCT.isEmpty()) {
-            loadData();
+        String key = txtTimkiem.getText();
+        if(key.equals("")){
+            JOptionPane.showMessageDialog(this,"Nhập keyword bạn cần");
             return;
         }
-        List<HoaDonChiTiet> hdctList = (List<HoaDonChiTiet>) HoaDonChiTietServices.getById(MaHDCT);
-        if (hdctList != null) {
-            tblModel.setNumRows(0);
-            for (HoaDonChiTiet hdct : hdctList) {
-                tblModel.addRow(new Object[]{hdct.getMaHDCT(),hdct.getMaHD(),hdct.getMaSP(),hdct.getSoLuongMua(),hdct.getTongTienThanhToan()+ " VNĐ"});
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn chi tiết với mã: " + MaHDCT);
+        String chon = cboTimKiem.getSelectedItem().toString();
+        HoaDonChiTietServices hdct = new HoaDonChiTietServices();
+        ArrayList<HoaDonChiTiet> qlhdct = (ArrayList<HoaDonChiTiet>) HoaDonChiTietServices.TimKiem(key, chon);
+        tblModel.setNumRows(0);
+        for (HoaDonChiTiet HDCT : qlhdct) {
+            tblModel.addRow(new Object[]{HDCT.getMaHDCT(),HDCT.getMaHD(),HDCT.getMaSP(),HDCT.getSoLuongMua(),HDCT.getTongTienThanhToan()+ " VNĐ"});
         }
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
@@ -187,7 +198,9 @@ public class QuanLyHDCT extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnTimKiem;
+    private javax.swing.JComboBox<String> cboTimKiem;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblHDCT;
     private javax.swing.JTextField txtTimkiem;

@@ -63,14 +63,19 @@ public class NhanVienSevices {
         return null;
     }
     
-    public static List<NhanVien> getById(String MaNV){
-        String sql = "select MaNV, HoTenNV, VaiTro,Tuoi, SDT, GioiTinh from NhanVien where MaNV = ?";
-        NhanVien nv = new NhanVien();
+    public static List<NhanVien> TimKiem(String key,String chon){
+        List<NhanVien> nvList = new ArrayList<>();
+        String column = switch(chon){
+            case"Mã nhân viên"->"MaNV";
+            case"Tên nhân viên"->"HoTenNV";
+            default->null;
+        };
+        String sql = "SELECT * FROM NhanVien WHERE " + column + " LIKE ?";
         try (Connection con = DriverManager.getConnection(connectionUrl);PreparedStatement stm = con.prepareStatement(sql)){
-            stm.setString(1,MaNV);
-            List<NhanVien> nvList = new ArrayList<>();
+            stm.setString(1,"%"+key+"%");
             ResultSet rs = stm.executeQuery();
             while(rs.next()){
+                NhanVien nv = new NhanVien();
                 nv.setMaNV(rs.getString("MaNV"));
                 nv.setHoTenNV(rs.getString("HoTenNV"));
                 nv.setVaiTro(rs.getString("VaiTro"));
@@ -80,6 +85,7 @@ public class NhanVienSevices {
                 nvList.add(nv);
             }
             return nvList;
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

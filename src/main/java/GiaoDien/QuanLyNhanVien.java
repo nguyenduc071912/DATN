@@ -8,6 +8,7 @@ package GiaoDien;
 
 import Mode.NhanVien;
 import Services.NhanVienSevices;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,6 +81,8 @@ DefaultTableModel tableModel;
         jLabel9 = new javax.swing.JLabel();
         txtTim = new javax.swing.JTextField();
         btnTim = new javax.swing.JButton();
+        cboTimKiem = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -125,6 +128,11 @@ DefaultTableModel tableModel;
         rdoNu.setText("Nữ");
 
         cboVaiTro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Phục vụ", "Pha chế", "Thu ngân", "Bảo vệ" }));
+        cboVaiTro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboVaiTroActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("Mã nhân viên");
 
@@ -158,6 +166,10 @@ DefaultTableModel tableModel;
                 btnTimActionPerformed(evt);
             }
         });
+
+        cboTimKiem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã nhân viên", "Tên nhân viên" }));
+
+        jLabel10.setText("Chọn tìm kiếm");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -214,10 +226,15 @@ DefaultTableModel tableModel;
                                                 .addComponent(txtTuoi, javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(cboVaiTro, javax.swing.GroupLayout.Alignment.LEADING, 0, 397, Short.MAX_VALUE)
                                                 .addComponent(txtTen, javax.swing.GroupLayout.Alignment.LEADING)))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(txtTim)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)))
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cboTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnTim, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -244,10 +261,12 @@ DefaultTableModel tableModel;
                             .addComponent(txtMa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8)
                             .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnTim))
+                            .addComponent(btnTim)
+                            .addComponent(cboTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel3)
                                     .addComponent(txtTen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -273,10 +292,8 @@ DefaultTableModel tableModel;
                                     .addComponent(btnThem)
                                     .addComponent(btnSua)
                                     .addComponent(btnXoa)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(33, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pack();
@@ -439,19 +456,17 @@ DefaultTableModel tableModel;
 
     private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
         // TODO add your handling code here:
-        String MaNV = txtTim.getText().trim();
-        if (MaNV.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập mã nhân viên!");
+        String key = txtTim.getText();
+        if(key.equals("")){
+            JOptionPane.showMessageDialog(this,"Nhập keyword bạn cần");
             return;
         }
-        List<NhanVien> nvList = (List<NhanVien>) NhanVienSevices.getById(MaNV);
-        if (nvList != null) {
-            tableModel.setNumRows(0);
-            for(NhanVien nv: nvList){
-                tableModel.addRow(new Object[]{nv.getMaNV(),nv.getHoTenNV(),nv.getVaiTro(),nv.getTuoi(),nv.getSDT(),nv.getGioiTinh() == 0 ? "Nam":"Nữ"});
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Không tìm thấy nhân viên với mã: " + MaNV);
+        String chon = cboTimKiem.getSelectedItem().toString();
+        NhanVienSevices nv = new NhanVienSevices();
+        ArrayList<NhanVien> qlnv = (ArrayList<NhanVien>) NhanVienSevices.TimKiem(key, chon);
+        tableModel.setNumRows(0);
+        for(NhanVien NV: qlnv){
+            tableModel.addRow(new Object[]{NV.getMaNV(),NV.getHoTenNV(),NV.getVaiTro(),NV.getTuoi(),NV.getSDT(),NV.getGioiTinh() == 0 ? "Nam":"Nữ"});
         }
     }//GEN-LAST:event_btnTimActionPerformed
 
@@ -473,6 +488,10 @@ DefaultTableModel tableModel;
             }
         }
     }//GEN-LAST:event_tblNVMouseClicked
+
+    private void cboVaiTroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboVaiTroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboVaiTroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -516,8 +535,10 @@ DefaultTableModel tableModel;
     private javax.swing.JButton btnTim;
     private javax.swing.JButton btnXoa;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox<String> cboTimKiem;
     private javax.swing.JComboBox<String> cboVaiTro;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

@@ -38,22 +38,29 @@ public class HoaDonServices {
         return null;
     }
     
-    public static List<HoaDon> getById(String MaHD) {
-        String sql = "select * from HoaDon where MaHD = ?";
-        HoaDon hd = new HoaDon();
-        try(Connection conn = DriverManager.getConnection(connectionUrl); PreparedStatement ps = conn.prepareStatement(sql);) {
-            ps.setString(1, MaHD);
-            List<HoaDon> hdlist = new ArrayList<>();
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
+    public static List<HoaDon> TimKiem(String key,String chon){
+        List<HoaDon> hdList = new ArrayList<>();
+        String column = switch(chon){
+            case"Mã hóa đơn"->"MaHD";
+            case"Tên nhân viên"->"NhanVien.HoTenNV";
+            case"Mã đơn hàng"->"MaDH";
+            default->null;
+        };
+        String sql = "select MaHD,NhanVien.HoTenNV,MaDH,NgayLapHD,GiaTien from HoaDon join NhanVien on NhanVien.MaNV = HoaDon.MaNV WHERE " + column + " LIKE ?";
+        try (Connection con = DriverManager.getConnection(connectionUrl);PreparedStatement stm = con.prepareStatement(sql)){
+            stm.setString(1,"%"+key+"%");
+            ResultSet rs = stm.executeQuery();
+            while(rs.next()){
+                HoaDon hd = new HoaDon();
                 hd.setMaHD(rs.getString("MaHD"));
-                hd.setMaNV(rs.getString("MaNV"));
+                hd.setMaNV(rs.getString("HoTenNV"));
                 hd.setMaDH(rs.getString("MaDH"));
                 hd.setNgayLapHD(rs.getString("NgayLapHD"));
                 hd.setGiaTien(rs.getInt("GiaTien"));
-                hdlist.add(hd);
+                hdList.add(hd);
             }
-            return hdlist;
+            return hdList;
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -7,6 +7,7 @@ package GiaoDien;
 
 import Mode.SanPham;
 import Services.SanPhamServices;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -68,6 +69,8 @@ DefaultTableModel tableModel;
         tblSP = new javax.swing.JTable();
         txtTim = new javax.swing.JTextField();
         btnTim = new javax.swing.JButton();
+        cboTimKiem = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -139,6 +142,15 @@ DefaultTableModel tableModel;
             }
         });
 
+        cboTimKiem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mã sản phẩm", "Tên nguyên liệu", "Tên sản phẩm" }));
+        cboTimKiem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboTimKiemActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Chọn tìm kiếm");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -162,18 +174,22 @@ DefaultTableModel tableModel;
                                     .addComponent(jLabel4))
                                 .addGap(54, 54, 54)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cboLoaiSP, javax.swing.GroupLayout.Alignment.TRAILING, 0, 318, Short.MAX_VALUE)
+                                    .addComponent(cboLoaiSP, javax.swing.GroupLayout.Alignment.TRAILING, 0, 299, Short.MAX_VALUE)
                                     .addComponent(txtMaNL)
                                     .addComponent(txtGiaTien, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(txtTenSP, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(txtMaSP, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnTim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(cboTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtTim)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnTim))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(395, 395, 395)
@@ -198,7 +214,13 @@ DefaultTableModel tableModel;
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtMaSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnTim))
+                            .addComponent(btnTim)
+                            .addComponent(cboTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(txtMaNL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -219,12 +241,11 @@ DefaultTableModel tableModel;
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnXoa)
                             .addComponent(btnSua)
-                            .addComponent(btnThem))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnThem)))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(17, 17, 17))))
+                        .addGap(6, 6, 6)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(15, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(63, 63, 63)
@@ -371,19 +392,17 @@ DefaultTableModel tableModel;
 
     private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
         // TODO add your handling code here:
-        String MaSP = txtTim.getText().trim();
-        if (MaSP.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập mã sản phảm!");
+        String key = txtTim.getText();
+        if(key.equals("")){
+            JOptionPane.showMessageDialog(this,"Nhập keyword bạn cần");
             return;
         }
-        List<SanPham> spList = (List<SanPham>) SanPhamServices.getById(MaSP);
-        if (spList != null) {
-            tableModel.setNumRows(0);
-            for(SanPham sp: spList){
-                tableModel.addRow(new Object[]{sp.getMaSP(),sp.getMaNL(),sp.getTenSP(),Integer.valueOf(sp.getGiaTien())+" VNĐ",sp.getLoaiSP(),sp.getMoTa()});
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Không tìm thấy sản phẩm với mã: " + MaSP);
+        String chon = cboTimKiem.getSelectedItem().toString();
+        SanPhamServices sp = new SanPhamServices();
+        ArrayList<SanPham> qlsp = (ArrayList<SanPham>) SanPhamServices.TimKiem(key, chon);
+        tableModel.setNumRows(0);
+        for(SanPham SP: qlsp){
+            tableModel.addRow(new Object[]{SP.getMaSP(),SP.getMaNL(),SP.getTenSP(),Integer.valueOf(SP.getGiaTien())+" VNĐ",SP.getLoaiSP(),SP.getMoTa()});
         }
     }//GEN-LAST:event_btnTimActionPerformed
 
@@ -401,6 +420,10 @@ DefaultTableModel tableModel;
             txtaMoTa.setText(sp.getMoTa());
         }
     }//GEN-LAST:event_tblSPMouseClicked
+
+    private void cboTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTimKiemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboTimKiemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -444,6 +467,7 @@ DefaultTableModel tableModel;
     private javax.swing.JButton btnTim;
     private javax.swing.JButton btnXoa;
     private javax.swing.JComboBox<String> cboLoaiSP;
+    private javax.swing.JComboBox<String> cboTimKiem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -451,6 +475,7 @@ DefaultTableModel tableModel;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblSP;

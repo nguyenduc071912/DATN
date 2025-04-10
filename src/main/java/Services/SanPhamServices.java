@@ -64,16 +64,22 @@ public class SanPhamServices {
         return null;
     }
     
-    public static List<SanPham> getById(String MaSP){
-        String sql = "select MaSP,MaNL,TenSP,GiaTien,LoaiSP,MoTa from SanPham where MaSP = ?";
-        SanPham sp = new SanPham();
+    public static List<SanPham> TimKiem(String key,String chon){
+        List<SanPham> spList = new ArrayList<>();
+        String column = switch(chon){
+            case"Mã sản phẩm"->"MaSP";
+            case"Tên nguyên liệu"->"Kho.TenNL";
+            case"Tên sản phẩm"->"TenSP";
+            default->null;
+        };
+        String sql = "select MaSP,Kho.TenNL,TenSP,GiaTien,LoaiSP,MoTa from SanPham join Kho on SanPham.MaNL = Kho.MaNL WHERE " + column + " LIKE ?";
         try (Connection con = DriverManager.getConnection(connectionUrl);PreparedStatement stm = con.prepareStatement(sql)){
-            stm.setString(1,MaSP);
-            List<SanPham> spList = new ArrayList<>();
+            stm.setString(1,"%"+key+"%");
             ResultSet rs = stm.executeQuery();
             while(rs.next()){
+                SanPham sp = new SanPham();
                 sp.setMaSP(rs.getString("MaSP"));
-                sp.setMaNL(rs.getString("MaNL"));
+                sp.setMaNL(rs.getString("TenNL"));
                 sp.setTenSP(rs.getString("TenSP"));
                 sp.setGiaTien(rs.getInt("GiaTien"));
                 sp.setLoaiSP(rs.getString("LoaiSP"));
@@ -81,6 +87,7 @@ public class SanPhamServices {
                 spList.add(sp);
             }
             return spList;
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

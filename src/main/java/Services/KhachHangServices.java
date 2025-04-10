@@ -40,14 +40,19 @@ public class KhachHangServices {
         return null;
     }
     
-    public static List<KhachHang> getById(String MaKH){
-        String sql = "select MaKH, TenKH,Tuoi, GioiTinh,SDT from KhachHang where MaKH = ?";
-        KhachHang kh = new KhachHang();
+    public static List<KhachHang> TimKiem(String key,String chon){
+        List<KhachHang> khList = new ArrayList<>();
+        String column = switch(chon){
+            case"Mã khách hàng"->"MaKH";
+            case"Tên khách hàng"->"TenKH";
+            default->null;
+        };
+        String sql = "SELECT * FROM KhachHang WHERE " + column + " LIKE ?";
         try (Connection con = DriverManager.getConnection(connectionUrl);PreparedStatement stm = con.prepareStatement(sql)){
-            stm.setString(1,MaKH);
-            List<KhachHang> khList = new ArrayList<>();
+            stm.setString(1,"%"+key+"%");
             ResultSet rs = stm.executeQuery();
             while(rs.next()){
+                KhachHang kh = new KhachHang();
                 kh.setMaKH(rs.getString("MaKH"));
                 kh.setTenKH(rs.getString("TenKH"));
                 kh.setTuoi(rs.getInt("Tuoi"));
@@ -56,6 +61,7 @@ public class KhachHangServices {
                 khList.add(kh);
             }
             return khList;
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

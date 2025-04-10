@@ -38,22 +38,29 @@ public class HoaDonChiTietServices {
         return null;
     }
     
-    public static List<HoaDonChiTiet> getById(String MaHDCT) {
-        String sql = "select * from HoaDonChiTiet where MaHDCT = ?";
-        HoaDonChiTiet hdct = new HoaDonChiTiet();
-        try(Connection conn = DriverManager.getConnection(connectionUrl); PreparedStatement ps = conn.prepareStatement(sql);) {
-            ps.setString(1, MaHDCT);
-            List<HoaDonChiTiet> hdctlist = new ArrayList<>();
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
+    public static List<HoaDonChiTiet> TimKiem(String key,String chon){
+        List<HoaDonChiTiet> hdctList = new ArrayList<>();
+        String column = switch(chon){
+            case"Mã hóa đơn chi tiết"->"MaHDCT";
+            case"Mã hóa đơn"->"MaHD";
+            case"Tên sản phẩm"->"SanPham.TenSP";
+            default->null;
+        };
+        String sql = "select MaHDCT, MaHD, SanPham.TenSP, SoLuongMua, TongTienThanhToan from HoaDonChiTiet join SanPham on SanPham.MaSP = HoaDonChiTiet.MaSP WHERE " + column + " LIKE ?";
+        try (Connection con = DriverManager.getConnection(connectionUrl);PreparedStatement stm = con.prepareStatement(sql)){
+            stm.setString(1,"%"+key+"%");
+            ResultSet rs = stm.executeQuery();
+            while(rs.next()){
+                HoaDonChiTiet hdct = new HoaDonChiTiet();
                 hdct.setMaHDCT(rs.getString("MaHDCT"));
                 hdct.setMaHD(rs.getString("MaHD"));
-                hdct.setMaSP(rs.getString("MaSP"));
+                hdct.setMaSP(rs.getString("TenSP"));
                 hdct.setSoLuongMua(rs.getInt("SoLuongMua"));
                 hdct.setTongTienThanhToan(rs.getFloat("TongTienThanhToan"));
-                hdctlist.add(hdct);
+                hdctList.add(hdct);
             }
-            return hdctlist;
+            return hdctList;
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
