@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
  * @author hongd
  */
 public class DangNhap extends javax.swing.JDialog {
+    public String TenDN;
+    
 
     /**
      * Creates new form DangNhap
@@ -27,6 +29,7 @@ public class DangNhap extends javax.swing.JDialog {
         setLocationRelativeTo(null);
         ImageIcon icon = new ImageIcon(getClass().getResource("/Images/logoBonBon.png"));
         setIconImage(icon.getImage());
+        
     }
 
     private boolean isDangNhapThanhCong = false;
@@ -40,6 +43,7 @@ public class DangNhap extends javax.swing.JDialog {
         String ten = txtTenTK.getText();
         String mk = new String(txtMK.getPassword());
         String sql = "Select VaiTro From NguoiDung where TenDangNhap = ? AND MatKhau = ?";
+
         try {
             Connection conn = DriverManager.getConnection(url);
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -50,10 +54,13 @@ public class DangNhap extends javax.swing.JDialog {
                 boolean vaitro = rs.getBoolean("VaiTro");
                 if (vaitro) {
                     isDangNhapThanhCong = true;
+                    TenDN = ten;
                     this.dispose();
                     JOptionPane.showMessageDialog(this, "Chào mừng Nhân viên!");
+                    
                 } else {
                     isDangNhapThanhCong = true;
+                    TenDN = ten;
                     this.dispose();
                     JOptionPane.showMessageDialog(this, "Chào mừng Quản lý!");
                 }
@@ -98,7 +105,7 @@ public class DangNhap extends javax.swing.JDialog {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setText("Mật Khẩu:");
 
-        txtTenTK.setText("Quản lý");
+        txtTenTK.setText("NhanVien");
         txtTenTK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTenTKActionPerformed(evt);
@@ -121,7 +128,12 @@ public class DangNhap extends javax.swing.JDialog {
             }
         });
 
-        txtMK.setText("ql123");
+        txtMK.setText("nv123");
+        txtMK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMKActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -189,6 +201,10 @@ public class DangNhap extends javax.swing.JDialog {
         // TODO add your handling code here:
         this.DangNhap();
     }//GEN-LAST:event_btnDangNhapActionPerformed
+
+    private void txtMKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMKActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMKActionPerformed
 
     /**
      * @param args the command line arguments

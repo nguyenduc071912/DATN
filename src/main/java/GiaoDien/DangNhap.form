@@ -122,7 +122,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtTenTK">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Qu&#x1ea3;n l&#xfd;"/>
+        <Property name="text" type="java.lang.String" value="NhanVien"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtTenTKActionPerformed"/>
@@ -152,8 +152,11 @@
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtMK">
       <Properties>
-        <Property name="text" type="java.lang.String" value="ql123"/>
+        <Property name="text" type="java.lang.String" value="nv123"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtMKActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

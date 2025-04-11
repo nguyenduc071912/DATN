@@ -30,6 +30,9 @@ import javax.swing.Timer;
  */
 public class GiaoDienChinh extends javax.swing.JFrame {
 
+    private String TenDangNhap;
+    private  String TenDN;
+
     /**
      * Creates new form GiaoDienChinh
      */
@@ -38,6 +41,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         init();
         ImageIcon icon = new ImageIcon(getClass().getResource("/Images/logoBonBon.png"));
         setIconImage(icon.getImage());
+        this.TenDangNhap = TenDN;
     }
 
     void init() {
@@ -47,8 +51,10 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         DangNhap dn = new DangNhap(this, true);
         dn.setVisible(true);
 
-        if (!dn.isDangNhapThanhCong()) {
-            System.exit(0); // Thoát chương trình nếu người dùng không đăng nhập
+        if (dn.isDangNhapThanhCong()) {
+            TenDN = dn.TenDN;
+        }else{
+            System.exit(0);
         }
         this.startDongHo();
     }
@@ -417,7 +423,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(gt.getContentPane());
         TabGDC.addTab("Giới thiệu", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Giới thiệu");
         JButton closeButton = new JButton("x");
@@ -447,6 +453,10 @@ public class GiaoDienChinh extends javax.swing.JFrame {
 
     private void btnSanPhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSanPhamActionPerformed
         // TODO add your handling code here:
+        if (TenDangNhap.equals("NhanVien")) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền truy cập chức năng này!");
+            return;
+        }
         for (int i = 0; i < TabGDC.getTabCount(); i++) {
             if (TabGDC.getTitleAt(i).equals("Sản phẩm")) {
                 TabGDC.setSelectedIndex(i);
@@ -487,6 +497,10 @@ public class GiaoDienChinh extends javax.swing.JFrame {
 
     private void btnNhanVienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhanVienActionPerformed
         // TODO add your handling code here:
+        if (TenDangNhap.equals("NhanVien")) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền truy cập chức năng này!");
+            return;
+        }
         for (int i = 0; i < TabGDC.getTabCount(); i++) {
             if (TabGDC.getTitleAt(i).equals("Nhân viên")) {
                 TabGDC.setSelectedIndex(i);
@@ -497,7 +511,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qlnv.getContentPane());
         TabGDC.addTab("Nhân viên", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Nhân viên");
         JButton closeButton = new JButton("x");
@@ -537,7 +551,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qlkh.getContentPane());
         TabGDC.addTab("Khách hàng", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Khách hàng");
         JButton closeButton = new JButton("x");
@@ -577,7 +591,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qldh.getContentPane());
         TabGDC.addTab("Đơn hàng", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Đơn hàng");
         JButton closeButton = new JButton("x");
@@ -617,7 +631,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qlhd.getContentPane());
         TabGDC.addTab("Hóa đơn", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Hóa đơn");
         JButton closeButton = new JButton("x");
@@ -647,6 +661,14 @@ public class GiaoDienChinh extends javax.swing.JFrame {
 
     private void btnTongHopThongKeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTongHopThongKeActionPerformed
         // TODO add your handling code here:
+        if (TenDangNhap.equals("NhanVien")) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền truy cập chức năng này!");
+            return;
+        }
+        if (TenDangNhap.equals("NhanVien")) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền truy cập chức năng này!");
+            return;
+        }
         for (int i = 0; i < TabGDC.getTabCount(); i++) {
             if (TabGDC.getTitleAt(i).equals("Tổng hợp - thống kê")) {
                 TabGDC.setSelectedIndex(i);
@@ -657,7 +679,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(tk.getContentPane());
         TabGDC.addTab("Tổng hợp - thống kê", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Tổng hợp - thống kê");
         JButton closeButton = new JButton("x");
@@ -703,6 +725,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         if (choice == JOptionPane.YES_OPTION) {
             DangNhap dn = new DangNhap(this, rootPaneCheckingEnabled);
             dn.setVisible(true);
+            TenDangNhap = dn.TenDN;
         }
     }//GEN-LAST:event_mniDangXuatActionPerformed
 
@@ -718,7 +741,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qlkh.getContentPane());
         TabGDC.addTab("Khách hàng", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Khách hàng");
         JButton closeButton = new JButton("x");
@@ -748,6 +771,10 @@ public class GiaoDienChinh extends javax.swing.JFrame {
 
     private void mniQLNVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniQLNVActionPerformed
         // TODO add your handling code here:
+        if (TenDangNhap.equals("NhanVien")) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền truy cập chức năng này!");
+            return;
+        }
         for (int i = 0; i < TabGDC.getTabCount(); i++) {
             if (TabGDC.getTitleAt(i).equals("Nhân viên")) {
                 TabGDC.setSelectedIndex(i);
@@ -758,7 +785,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qlnv.getContentPane());
         TabGDC.addTab("Nhân viên", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Nhân viên");
         JButton closeButton = new JButton("x");
@@ -788,6 +815,10 @@ public class GiaoDienChinh extends javax.swing.JFrame {
 
     private void mniQLSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniQLSPActionPerformed
         // TODO add your handling code here:
+        if (TenDangNhap.equals("NhanVien")) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền truy cập chức năng này!");
+            return;
+        }
         for (int i = 0; i < TabGDC.getTabCount(); i++) {
             if (TabGDC.getTitleAt(i).equals("Sản phẩm")) {
                 TabGDC.setSelectedIndex(i);
@@ -798,7 +829,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qlsp.getContentPane());
         TabGDC.addTab("Sản phẩm", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Sản phẩm");
         JButton closeButton = new JButton("x");
@@ -838,7 +869,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qldh.getContentPane());
         TabGDC.addTab("Đơn hàng", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Đơn hàng");
         JButton closeButton = new JButton("x");
@@ -878,7 +909,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qlhd.getContentPane());
         TabGDC.addTab("Hóa đơn", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Hóa đơn");
         JButton closeButton = new JButton("x");
@@ -908,6 +939,10 @@ public class GiaoDienChinh extends javax.swing.JFrame {
 
     private void mniThongKeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniThongKeActionPerformed
         // TODO add your handling code here:
+        if (TenDangNhap.equals("NhanVien")) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền truy cập chức năng này!");
+            return;
+        }
         for (int i = 0; i < TabGDC.getTabCount(); i++) {
             if (TabGDC.getTitleAt(i).equals("Tổng hợp - thống kê")) {
                 TabGDC.setSelectedIndex(i);
@@ -918,7 +953,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(tk.getContentPane());
         TabGDC.addTab("Tổng hợp - thống kê", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Tổng hợp - thống kê");
         JButton closeButton = new JButton("x");
@@ -958,7 +993,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(gt.getContentPane());
         TabGDC.addTab("Giới thiệu", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Giới thiệu");
         JButton closeButton = new JButton("x");
@@ -998,7 +1033,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qlhdct.getContentPane());
         TabGDC.addTab("Hóa đơn chi tiết", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Hóa đơn chi tiết");
         JButton closeButton = new JButton("x");
@@ -1038,7 +1073,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(qlhdct.getContentPane());
         TabGDC.addTab("Hóa đơn chi tiết", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Hóa đơn chi tiết");
         JButton closeButton = new JButton("x");
@@ -1068,6 +1103,10 @@ public class GiaoDienChinh extends javax.swing.JFrame {
 
     private void mniKhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniKhoActionPerformed
         // TODO add your handling code here:
+        if (TenDangNhap.equals("NhanVien")) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền truy cập chức năng này!");
+            return;
+        }
         for (int i = 0; i < TabGDC.getTabCount(); i++) {
             if (TabGDC.getTitleAt(i).equals("Kho")) {
                 TabGDC.setSelectedIndex(i);
@@ -1078,7 +1117,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(k.getContentPane());
         TabGDC.addTab("Kho", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Kho");
         JButton closeButton = new JButton("x");
@@ -1108,6 +1147,10 @@ public class GiaoDienChinh extends javax.swing.JFrame {
 
     private void btnKhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKhoActionPerformed
         // TODO add your handling code here:
+        if (TenDangNhap.equals("NhanVien")) {
+            JOptionPane.showMessageDialog(this, "Bạn không có quyền truy cập chức năng này!");
+            return;
+        }
         for (int i = 0; i < TabGDC.getTabCount(); i++) {
             if (TabGDC.getTitleAt(i).equals("Kho")) {
                 TabGDC.setSelectedIndex(i);
@@ -1118,7 +1161,7 @@ public class GiaoDienChinh extends javax.swing.JFrame {
         JPanel panel = new JPanel();
         panel.add(k.getContentPane());
         TabGDC.addTab("Kho", panel);
-        
+
         JPanel tabHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
         JLabel titleLabel = new JLabel("Kho");
         JButton closeButton = new JButton("x");
