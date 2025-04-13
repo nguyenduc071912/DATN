@@ -35,10 +35,10 @@ public class QuanLyDonHang extends javax.swing.JFrame {
     DefaultTableModel tblModel;
     Map<String, String> mapTenToMa = new HashMap<>();
     Map<String, String> mapMaToTen = new HashMap<>();
-    
+
     Map<String, String> mapTenToMaKH = new HashMap<>();
     Map<String, String> mapMaToTenKH = new HashMap<>();
-    
+
     Map<String, String> mapTenToMaSP = new HashMap<>();
     Map<String, String> mapMaToTenSP = new HashMap<>();
 
@@ -54,9 +54,16 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         loadNhanVienThuNgan();
         loadKhachHang();
         loadSP();
-        
-
+        timer.start ();
     }
+
+    Timer timer = new Timer(10000, new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            loadNhanVienThuNgan();
+            loadKhachHang();
+            loadSP();
+        }
+    });
 
     
 
@@ -87,7 +94,7 @@ public class QuanLyDonHang extends javax.swing.JFrame {
             mapMaToTenKH.put(ma, ten);
         }
     }
-    
+
     public void loadSP() {
         List<SanPham> list = DonHangServices.getTenSP();
         cboSanPham.removeAllItems();
@@ -672,7 +679,7 @@ public class QuanLyDonHang extends javax.swing.JFrame {
 
     private void cboSanPhamKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cboSanPhamKeyReleased
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_cboSanPhamKeyReleased
 
     private void cboSanPhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboSanPhamActionPerformed
