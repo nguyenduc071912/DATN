@@ -5,7 +5,9 @@
 package Services;
 
 import Mode.DonHang;
+import Mode.KhachHang;
 import Mode.NhanVien;
+import Mode.SanPham;
 import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.Date;
@@ -188,22 +190,6 @@ public class DonHangServices {
         return false;
     }
 
-    public static boolean isThuNgan(String maNV) {
-        String query = "SELECT COUNT(*) FROM NhanVien WHERE MaNV = ? AND VaiTro = 'Thu ngân'";
-
-        try (Connection conn = DriverManager.getConnection(connectionUrl); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, maNV);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next() && rs.getInt(1) > 0) {
-                return true; // Nhân viên là thu ngân
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false; // Không phải thu ngân
-    }
-
     public static List<NhanVien> getTenNhanVienThuNgan() {
         List<NhanVien> list = new ArrayList<>();
         String sql = "SELECT MaNV, HoTenNV FROM NhanVien WHERE VaiTro = 'Thu ngân'";
@@ -214,6 +200,40 @@ public class DonHangServices {
                 nv.setMaNV(rs.getString("MaNV"));
                 nv.setHoTenNV(rs.getString("HoTenNV"));
                 list.add(nv);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public static List<KhachHang> getTenKhach() {
+        List<KhachHang> list = new ArrayList<>();
+        String sql = "SELECT MaKH, TenKH FROM KhachHang";
+        try (Connection conn = DriverManager.getConnection(connectionUrl); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                KhachHang kh = new KhachHang();
+                kh.setMaKH(rs.getString("MaKH"));
+                kh.setTenKH(rs.getString("TenKH"));
+                list.add(kh);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public static List<SanPham> getTenSP() {
+        List<SanPham> list = new ArrayList<>();
+        String sql = "SELECT MaSp, TenSP FROM SanPham";
+        try (Connection conn = DriverManager.getConnection(connectionUrl); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                SanPham kh = new SanPham();
+                kh.setMaSP(rs.getString("MaSP"));
+                kh.setTenSP(rs.getString("TenSP"));
+                list.add(kh);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -105,7 +105,7 @@ public class DangNhap extends javax.swing.JDialog {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setText("Mật Khẩu:");
 
-        txtTenTK.setText("NhanVien");
+        txtTenTK.setText("QuanLy");
         txtTenTK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTenTKActionPerformed(evt);
@@ -128,7 +128,7 @@ public class DangNhap extends javax.swing.JDialog {
             }
         });
 
-        txtMK.setText("nv123");
+        txtMK.setText("ql123");
         txtMK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtMKActionPerformed(evt);
