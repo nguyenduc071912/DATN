@@ -11,6 +11,10 @@ import Services.KhoServices;
 import Services.SanPhamServices;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class QuanLySanPham extends javax.swing.JFrame {
 DefaultTableModel tableModel;
+static String connectionUrl = "jdbc:sqlserver://26.107.57.204:1433;databaseName=DATN_PRO230;user=datn;password=123;trustServerCertificate=true";
     Map<String, String> mapTenToMa = new HashMap<>();
     Map<String, String> mapMaToTen = new HashMap<>();
     /**
@@ -100,6 +105,7 @@ DefaultTableModel tableModel;
         cboTimKiem = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         cboMaNguyenLieu = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -180,6 +186,13 @@ DefaultTableModel tableModel;
 
         jLabel8.setText("Chọn tìm kiếm");
 
+        jButton1.setText("+");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -206,9 +219,12 @@ DefaultTableModel tableModel;
                                     .addComponent(cboLoaiSP, javax.swing.GroupLayout.Alignment.TRAILING, 0, 299, Short.MAX_VALUE)
                                     .addComponent(txtGiaTien, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(txtTenSP, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(txtMaSP, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(cboMaNguyenLieu, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(cboMaNguyenLieu, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtMaSP)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton1)))))
                         .addGap(37, 37, 37)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -247,7 +263,9 @@ DefaultTableModel tableModel;
                             .addComponent(cboTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
@@ -453,6 +471,28 @@ DefaultTableModel tableModel;
         // TODO add your handling code here:
     }//GEN-LAST:event_cboTimKiemActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try {
+            String sql = "SELECT MAX(MaSP) FROM SanPham";
+            Connection conn = DriverManager.getConnection(connectionUrl);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            int soMoi = 1;
+            if (rs.next() && rs.getString(1) != null) {
+                String maCu = rs.getString(1); 
+                String soStr = maCu.substring(2).trim();
+                soMoi = Integer.parseInt(soStr) + 1;
+                String maMoi = String.format("SP%02d", soMoi);
+                txtMaSP.setText(maMoi);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi tạo mã sản phẩm");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -497,6 +537,7 @@ DefaultTableModel tableModel;
     private javax.swing.JComboBox<String> cboLoaiSP;
     private javax.swing.JComboBox<String> cboMaNguyenLieu;
     private javax.swing.JComboBox<String> cboTimKiem;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

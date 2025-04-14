@@ -33,8 +33,10 @@
                   <Group type="102" attributes="0">
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
-                      <Component id="txtMa" min="-2" pref="317" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="txtMa" min="-2" pref="276" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnTaoMa" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                       <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cboTimKiem" pref="0" max="32767" attributes="0"/>
@@ -101,6 +103,7 @@
                   <Component id="txtTim" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cboTimKiem" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnTaoMa" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -276,6 +279,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Ch&#x1ecd;n t&#xec;m ki&#x1ebf;m"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnTaoMa">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="+"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTaoMaActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

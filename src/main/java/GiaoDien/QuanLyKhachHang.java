@@ -6,6 +6,10 @@ package GiaoDien;
 
 import Mode.KhachHang;
 import Services.KhachHangServices;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,7 +22,8 @@ import javax.swing.table.DefaultTableModel;
  * @author Administrator
  */
 public class QuanLyKhachHang extends javax.swing.JFrame {
-DefaultTableModel tableModel;
+    DefaultTableModel tableModel;
+    static String connectionUrl = "jdbc:sqlserver://26.107.57.204:1433;databaseName=DATN_PRO230;user=datn;password=123;trustServerCertificate=true";
     /**
      * Creates new form QuanLyKhachHang
      */
@@ -77,6 +82,7 @@ DefaultTableModel tableModel;
         btnTim = new javax.swing.JButton();
         cboTimKiem = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
+        btnTaoMa = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,6 +156,13 @@ DefaultTableModel tableModel;
 
         jLabel7.setText("Chọn tìm kiếm");
 
+        btnTaoMa.setText("+");
+        btnTaoMa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTaoMaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -160,8 +173,10 @@ DefaultTableModel tableModel;
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(43, 43, 43)
-                        .addComponent(txtMa, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(txtMa, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnTaoMa)
+                        .addGap(30, 30, 30)
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cboTimKiem, 0, 1, Short.MAX_VALUE)
@@ -214,7 +229,8 @@ DefaultTableModel tableModel;
                     .addComponent(btnTim)
                     .addComponent(txtTim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel7)
+                    .addComponent(btnTaoMa))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -430,6 +446,28 @@ DefaultTableModel tableModel;
         }
     }//GEN-LAST:event_tblKHMouseClicked
 
+    private void btnTaoMaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoMaActionPerformed
+        // TODO add your handling code here:
+        try {
+            String sql = "SELECT MAX(MaKH) FROM KhachHang";
+            Connection conn = DriverManager.getConnection(connectionUrl);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            int soMoi = 1;
+            if (rs.next() && rs.getString(1) != null) {
+                String maCu = rs.getString(1); 
+                String soStr = maCu.substring(2).trim();
+                soMoi = Integer.parseInt(soStr) + 1;
+                String maMoi = String.format("KH%02d", soMoi);
+                txtMa.setText(maMoi);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi tạo mã khách hàng");
+        }
+    }//GEN-LAST:event_btnTaoMaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -467,6 +505,7 @@ DefaultTableModel tableModel;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSua;
+    private javax.swing.JButton btnTaoMa;
     private javax.swing.JButton btnThem;
     private javax.swing.JButton btnTim;
     private javax.swing.JButton btnXoa;
