@@ -5,6 +5,7 @@
 package Services;
 
 
+import Mode.Kho;
 import Mode.SanPham;
 import static Services.KhoServices.connectionUrl;
 import java.sql.Connection;
@@ -92,6 +93,23 @@ public class SanPhamServices {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    public static List<Kho> getTenNL() {
+        List<Kho> list = new ArrayList<>();
+        String sql = "SELECT MaNL, TenNL FROM Kho";
+        try (Connection conn = DriverManager.getConnection(connectionUrl); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Kho k = new Kho();
+                k.setMaNL(rs.getString("MaNL"));
+                k.setTenNL(rs.getString("TenNL"));
+                list.add(k);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
     
     public static boolean Create(SanPham sp){

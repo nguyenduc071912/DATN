@@ -57,7 +57,7 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         timer.start ();
     }
 
-    Timer timer = new Timer(10000, new ActionListener() {
+    Timer timer = new Timer(120000, new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
             loadNhanVienThuNgan();
             loadKhachHang();
@@ -285,6 +285,12 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         DateNgayTaoDon.setDateFormatString("yyyy-MM-dd");
 
         cboNhanVien.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+
+        cboKhachHang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboKhachHangActionPerformed(evt);
+            }
+        });
 
         cboSanPham.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -686,6 +692,10 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         // TODO add your handling code here:
         tinhTongTien();
     }//GEN-LAST:event_cboSanPhamActionPerformed
+
+    private void cboKhachHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboKhachHangActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboKhachHangActionPerformed
 
     /**
      * @param args the command line arguments

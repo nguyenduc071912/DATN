@@ -5,11 +5,18 @@
 package GiaoDien;
 
 
+import Mode.Kho;
 import Mode.SanPham;
+import Services.KhoServices;
 import Services.SanPhamServices;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,6 +25,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class QuanLySanPham extends javax.swing.JFrame {
 DefaultTableModel tableModel;
+    Map<String, String> mapTenToMa = new HashMap<>();
+    Map<String, String> mapMaToTen = new HashMap<>();
     /**
      * Creates new form SanPham
      */
@@ -25,7 +34,14 @@ DefaultTableModel tableModel;
         initComponents();
         initTable();
         loadData();
+        loadNL();
+        timer.start();
     }
+    Timer timer = new Timer(120000, new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            loadNL();
+        }
+    });
     public void initTable(){
         tableModel = new DefaultTableModel();
         tableModel.setColumnIdentifiers(new String[]{"Mã sản phẩm","Tên nguyên liệu","Tên sản phẩm","Giá tiền","Loại SP","Mô tả"});
@@ -36,6 +52,19 @@ DefaultTableModel tableModel;
         tableModel.setNumRows(0);
         for(SanPham sp: spList){
             tableModel.addRow(new Object[]{sp.getMaSP(),sp.getMaNL(),sp.getTenSP(),Integer.valueOf(sp.getGiaTien())+" VNĐ",sp.getLoaiSP(),sp.getMoTa()});
+        }
+    }
+    public void loadNL() {
+        List<Kho> list = SanPhamServices.getTenNL();
+        cboMaNguyenLieu.removeAllItems();
+        mapTenToMa.clear();
+
+        for (Kho k : list) {
+            String ten = k.getTenNL();
+            String ma = k.getMaNL();
+            cboMaNguyenLieu.addItem(ten);
+            mapTenToMa.put(ten, ma);
+            mapMaToTen.put(ma, ten);
         }
     }
 
@@ -57,7 +86,6 @@ DefaultTableModel tableModel;
         jLabel3 = new javax.swing.JLabel();
         txtMaSP = new javax.swing.JTextField();
         btnThem = new javax.swing.JButton();
-        txtMaNL = new javax.swing.JTextField();
         btnSua = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         btnXoa = new javax.swing.JButton();
@@ -71,6 +99,7 @@ DefaultTableModel tableModel;
         btnTim = new javax.swing.JButton();
         cboTimKiem = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
+        cboMaNguyenLieu = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -166,7 +195,7 @@ DefaultTableModel tableModel;
                                 .addComponent(btnSua)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnXoa))
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGap(16, 16, 16)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
@@ -175,11 +204,11 @@ DefaultTableModel tableModel;
                                 .addGap(54, 54, 54)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cboLoaiSP, javax.swing.GroupLayout.Alignment.TRAILING, 0, 299, Short.MAX_VALUE)
-                                    .addComponent(txtMaNL)
                                     .addComponent(txtGiaTien, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(txtTenSP, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(txtMaSP, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(cboMaNguyenLieu, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(37, 37, 37)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -221,9 +250,9 @@ DefaultTableModel tableModel;
                         .addComponent(jLabel8)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(txtMaNL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(12, 12, 12)
+                        .addComponent(cboMaNguyenLieu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
                         .addComponent(txtTenSP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(23, 23, 23)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -266,9 +295,6 @@ DefaultTableModel tableModel;
         if(txtMaSP.getText().isEmpty()){
             sb.append("Nhập mã sản phẩm\n");
         }
-        if(txtMaNL.getText().isEmpty()){
-            sb.append("Nhập mã nguyên liệu\n");
-        }
         if(txtTenSP.getText().isEmpty()){
             sb.append("Nhập tên sản phẩm\n");
         }
@@ -294,7 +320,9 @@ DefaultTableModel tableModel;
         try {
             SanPham sp = new SanPham();
             sp.setMaSP(txtMaSP.getText());
-            sp.setMaNL(txtMaNL.getText());
+            String tenChonNL = (String) cboMaNguyenLieu.getSelectedItem();
+            String maNL = mapTenToMa.get(tenChonNL);
+            sp.setMaNL(maNL);
             sp.setTenSP(txtTenSP.getText());
             sp.setGiaTien(Integer.parseInt(txtGiaTien.getText()));
             sp.setLoaiSP(cboLoaiSP.getSelectedItem().toString());
@@ -318,9 +346,6 @@ DefaultTableModel tableModel;
         if(txtMaSP.getText().isEmpty()){
             sb.append("Nhập mã sản phẩm\n");
         }
-        if(txtMaNL.getText().isEmpty()){
-            sb.append("Nhập mã nguyên liệu\n");
-        }
         if(txtTenSP.getText().isEmpty()){
             sb.append("Nhập tên sản phẩm\n");
         }
@@ -346,7 +371,9 @@ DefaultTableModel tableModel;
         try {
             SanPham sp = new SanPham();
             sp.setMaSP(txtMaSP.getText());
-            sp.setMaNL(txtMaNL.getText());
+            String tenChonNL = (String) cboMaNguyenLieu.getSelectedItem();
+            String maNL = mapTenToMa.get(tenChonNL);
+            sp.setMaNL(maNL);
             sp.setTenSP(txtTenSP.getText());
             sp.setGiaTien(Integer.parseInt(txtGiaTien.getText()));
             sp.setLoaiSP(cboLoaiSP.getSelectedItem().toString());
@@ -413,7 +440,8 @@ DefaultTableModel tableModel;
             String ma = (String) tblSP.getValueAt(row, 0);
             SanPham sp = SanPhamServices.getByName(ma);
             txtMaSP.setText(sp.getMaSP());
-            txtMaNL.setText(sp.getMaNL());
+            String tenNL = mapMaToTen.get(sp.getMaNL());
+            cboMaNguyenLieu.setSelectedItem(tenNL);
             txtTenSP.setText(sp.getTenSP());
             txtGiaTien.setText(String.valueOf(sp.getGiaTien()));
             cboLoaiSP.setSelectedItem(sp.getLoaiSP());
@@ -467,6 +495,7 @@ DefaultTableModel tableModel;
     private javax.swing.JButton btnTim;
     private javax.swing.JButton btnXoa;
     private javax.swing.JComboBox<String> cboLoaiSP;
+    private javax.swing.JComboBox<String> cboMaNguyenLieu;
     private javax.swing.JComboBox<String> cboTimKiem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -480,7 +509,6 @@ DefaultTableModel tableModel;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblSP;
     private javax.swing.JTextField txtGiaTien;
-    private javax.swing.JTextField txtMaNL;
     private javax.swing.JTextField txtMaSP;
     private javax.swing.JTextField txtTenSP;
     private javax.swing.JTextField txtTim;
