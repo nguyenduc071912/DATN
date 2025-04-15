@@ -33,6 +33,7 @@ static String connectionUrl = "jdbc:sqlserver://26.107.57.204:1433;databaseName=
         initComponents();
         initTable();
         loadData();
+        txtMa.setEnabled(false);
     }
     public void initTable(){
         tableModel = new DefaultTableModel();
@@ -472,8 +473,7 @@ static String connectionUrl = "jdbc:sqlserver://26.107.57.204:1433;databaseName=
         // TODO add your handling code here:
         String key = txtTim.getText();
         if(key.equals("")){
-            JOptionPane.showMessageDialog(this,"Nhập keyword bạn cần");
-            return;
+            loadData();
         }
         String chon = cboTimKiem.getSelectedItem().toString();
         NhanVienSevices nv = new NhanVienSevices();

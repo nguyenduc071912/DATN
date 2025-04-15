@@ -50,6 +50,7 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         initTable();
         loadData();
         txtTongTien.setEnabled(false);
+        txtMaDH.setEnabled(false);
         sdf.setLenient(false);
         loadNhanVienThuNgan();
         loadKhachHang();
@@ -448,8 +449,7 @@ public class QuanLyDonHang extends javax.swing.JFrame {
         // TODO add your handling code here:
         String MaDH = txtTim.getText().trim();
         if (MaDH.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập mã đơn hàng!");
-            return;
+            loadData();
         }
         List<DonHang> dhList = (List<DonHang>) DonHangServices.getById(MaDH);
         if (dhList != null) {

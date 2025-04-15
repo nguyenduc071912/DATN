@@ -155,8 +155,7 @@ public class QuanLyHoaDon extends javax.swing.JFrame {
         // TODO add your handling code here:
         String key = txtTim.getText();
         if(key.equals("")){
-            JOptionPane.showMessageDialog(this,"Nhập keyword bạn cần");
-            return;
+            loadData();
         }
         String chon = cboTimKiem.getSelectedItem().toString();
         HoaDonServices hd = new HoaDonServices();

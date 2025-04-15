@@ -31,6 +31,7 @@ public class QuanLyKhachHang extends javax.swing.JFrame {
         initComponents();
         initTable();
         loadData();
+        txtMa.setEnabled(false);
     }
     public void initTable(){
         tableModel = new DefaultTableModel();
@@ -338,9 +339,6 @@ public class QuanLyKhachHang extends javax.swing.JFrame {
         }else{
             try {
                 int namSinh = Integer.parseInt(txtTuoi.getText());
-                if (namSinh >= 2009) {
-                    sb.append("Chưa đủ 16 tuổi để mua hàng\n");
-                }
             } catch (NumberFormatException e) {
                 sb.append("Vui lòng nhập số hợp lệ cho tuổi\n");
             }
@@ -416,8 +414,7 @@ public class QuanLyKhachHang extends javax.swing.JFrame {
         // TODO add your handling code here:
         String key = txtTim.getText();
         if(key.equals("")){
-            JOptionPane.showMessageDialog(this,"Nhập keyword bạn cần");
-            return;
+            loadData();
         }
         String chon = cboTimKiem.getSelectedItem().toString();
         KhachHangServices kh = new KhachHangServices();

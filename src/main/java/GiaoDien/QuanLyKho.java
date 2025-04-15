@@ -35,7 +35,7 @@ public class QuanLyKho extends javax.swing.JFrame {
         initComponents();
         initTable();
         loadData();
-        startAutoRefresh();
+        txtMa.setEnabled(false);
     }
 
     public void initTable() {
@@ -52,16 +52,7 @@ public class QuanLyKho extends javax.swing.JFrame {
         }
     }
 
-    public void startAutoRefresh() {
-        timer = new Timer(2000, new ActionListener() {
-            // 2000ms = 2 giây
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadData(); // Gọi phương thức cập nhật bảng
-            }
-        });
-        timer.start(); // Chạy Timer
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -263,8 +254,7 @@ public class QuanLyKho extends javax.swing.JFrame {
         // TODO add your handling code here:
         String key = txtTim.getText();
         if(key.equals("")){
-            JOptionPane.showMessageDialog(this,"Nhập keyword bạn cần");
-            return;
+            loadData();
         }
         String chon = cboTimKiem.getSelectedItem().toString();
         KhoServices k = new KhoServices();

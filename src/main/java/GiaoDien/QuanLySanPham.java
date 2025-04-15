@@ -40,6 +40,7 @@ static String connectionUrl = "jdbc:sqlserver://26.107.57.204:1433;databaseName=
         initTable();
         loadData();
         loadNL();
+        txtMaSP.setEnabled(false);
         timer.start();
     }
     Timer timer = new Timer(120000, new ActionListener() {
@@ -439,8 +440,7 @@ static String connectionUrl = "jdbc:sqlserver://26.107.57.204:1433;databaseName=
         // TODO add your handling code here:
         String key = txtTim.getText();
         if(key.equals("")){
-            JOptionPane.showMessageDialog(this,"Nhập keyword bạn cần");
-            return;
+            loadData();
         }
         String chon = cboTimKiem.getSelectedItem().toString();
         SanPhamServices sp = new SanPhamServices();
